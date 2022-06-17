@@ -4,9 +4,8 @@ import pandas as pd
 import os
 import shutil
 import codecs
-import vk
 import pickle
-import csv
+
 
 
 
