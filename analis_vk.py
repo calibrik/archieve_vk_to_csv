@@ -72,6 +72,8 @@ def dialog_setup(dirname,*debug):
                         date=dialog['Дата отправки'][-1]
                     author=author[0]
                     message=div[1]
+                    if message=='':
+                        message='NaN'
                     involved=div[2]
                     dialog['Автор'].append(author)
                     dialog['Дата отправки'].append(date)
