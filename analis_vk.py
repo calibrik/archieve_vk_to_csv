@@ -123,11 +123,11 @@ def load_obj(name ):
         
 dirname=input('Введите папку с распакованным архивом: ')
 savename='dialogs_in_csv/'+dirname
-logdir='log/'+dirname
+logdir='.log/'+dirname
 dirname=dirname+'/messages'
 
-if os.path.exists('log')==False:
-    os.mkdir('log')
+if os.path.exists('.log')==False:
+    os.mkdir('.log')
 if os.path.exists(logdir)==False:
     os.mkdir(logdir)
     name_dialog=name_setup(dirname)
