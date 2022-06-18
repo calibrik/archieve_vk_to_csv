@@ -117,8 +117,10 @@ def combine(name_dialog,dialog_combo,savename):
     table=pd.DataFrame(dialog_combo)
     name=savename+name_dialog+'.csv'
     table=table.sort_values('Дата отправки')
+    name=name.replace('|','')
+    name=name.replace('?','')
     try:
-        table.to_csv(name,index=False)
+        table.to_csv(name,index=False,encoding='utf-8')
     except Exception as exp:
         print('ОШИБКА ',exp,' с диалогом ',name_dialog) 
 
