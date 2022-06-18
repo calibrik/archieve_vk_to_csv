@@ -139,11 +139,13 @@ if __name__=='__main__':
             os.mkdir('.log')
         if os.path.exists(logdir)==False:
             os.mkdir(logdir)
+            print("Создаем файлы подгрузки")
             name_dialog=name_setup(dirname)
             dialogs=dialog_setup(dirname)
             save_obj(name_dialog,logdir+'/name_dialog.pkl')
             save_obj(dialogs,logdir+'/dialogs.pkl')
         else:
+            print("Подгружаем данные")
             name_dialog=load_obj(logdir+'/name_dialog.pkl')
             dialogs=load_obj(logdir+'/dialogs.pkl')
         if os.path.exists('dialogs_in_csv')==False:
@@ -151,7 +153,7 @@ if __name__=='__main__':
         if os.path.exists(savename)==True:
             shutil.rmtree(savename)
         os.mkdir(savename)
-        print('Затрачено времени: ',time.time()-t)
+        print('Затрачено времени: ',time.time()-t,'c')
         while True:
             a=input('Введите имя диалога (кроме групп), 1, если хотите перевести в csv все диалоги, 0, чтобы выйти:')
             if a=='0':
