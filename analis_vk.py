@@ -44,23 +44,23 @@ def dialog_setup(dirname,*debug):
                     if len(date)>3:
                         date.pop(3)
                         if date[1]=='янв':
-                            date[1]='1'
+                            date[1]='01'
                         elif date[1]=='фев':
-                            date[1]='2'
+                            date[1]='02'
                         elif date[1]=='мар':
-                            date[1]='3'
+                            date[1]='03'
                         elif date[1]=='апр':
-                            date[1]='4'
+                            date[1]='04'
                         elif date[1]=='мая':
-                            date[1]='5'
+                            date[1]='05'
                         elif date[1]=='июн':
-                            date[1]='6'
+                            date[1]='06'
                         elif date[1]=='июл':
-                            date[1]='7'
+                            date[1]='07'
                         elif date[1]=='авг':
-                            date[1]='8'
+                            date[1]='08'
                         elif date[1]=='сен':
-                            date[1]='9'
+                            date[1]='09'
                         elif date[1]=='окт':
                             date[1]='10'
                         elif date[1]=='ноя':
@@ -106,14 +106,13 @@ def name_setup(dirname):
     return name_dialog
 
 def combine(name_dialog,dialog_combo,savename):
-    for i in range(len(name_dialog)):
-        table=pd.DataFrame(dialog_combo[i])
-        name=savename+'/'+name_dialog[i]+'.csv'
-        table=table.sort_values('Дата отправки')
-        try:
-            table.to_csv(name)
-        except Exception:
-            print('Баг с диалогом ',name_dialog[i]) 
+    table=pd.DataFrame(dialog_combo)
+    name=savename+name_dialog+'.csv'
+    table=table.sort_values('Дата отправки')
+    try:
+        table.to_csv(name)
+    except Exception:
+        print('Баг с диалогом ',name_dialog) 
 
 def save_obj(obj, name ):
     with open(name, 'wb') as f:
@@ -121,27 +120,48 @@ def save_obj(obj, name ):
 
 def load_obj(name ):
     with open(name, 'rb') as f:
-        return pickle.load(f)   
-        
-dirname=input('Введите папку с распакованным архивом: ')
-savename='dialogs_in_csv/'+dirname
-logdir='.log/'+dirname
-dirname=dirname+'/messages'
+        return pickle.load(f)
 
-if os.path.exists('.log')==False:
-    os.mkdir('.log')
-if os.path.exists(logdir)==False:
-    os.mkdir(logdir)
-    name_dialog=name_setup(dirname)
-    dialogs=dialog_setup(dirname)
-    save_obj(name_dialog,logdir+'/name_dialog.pkl')
-    save_obj(dialogs,logdir+'/dialogs.pkl')
-else:
-    name_dialog=load_obj(logdir+'/name_dialog.pkl')
-    dialogs=load_obj(logdir+'/dialogs.pkl')
-if os.path.exists('dialogs_in_csv')==False:
-    os.mkdir('dialogs_in_csv')
-if os.path.exists(savename)==True:
-    shutil.rmtree(savename)
-os.mkdir(savename)
-combine(name_dialog,dialogs,savename)
+def dump_all(name_dialog,dialog_combo,savename):
+    for i in range(len(name_dialog)):
+        combine(name_dialog[i],dialog_combo[i],savename+'/')
+
+   
+if __name__=='__main__':
+    dirname=input('Введите папку с распакованным архивом: ')
+    logdir='.log/'+dirname
+    savename='dialogs_in_csv/'+dirname
+    dirname=dirname+'/messages'
+    if os.path.exists(dirname):
+        if os.path.exists('.log')==False:
+            os.mkdir('.log')
+        if os.path.exists(logdir)==False:
+            os.mkdir(logdir)
+            name_dialog=name_setup(dirname)
+            dialogs=dialog_setup(dirname)
+            save_obj(name_dialog,logdir+'/name_dialog.pkl')
+            save_obj(dialogs,logdir+'/dialogs.pkl')
+        else:
+            name_dialog=load_obj(logdir+'/name_dialog.pkl')
+            dialogs=load_obj(logdir+'/dialogs.pkl')
+        if os.path.exists('dialogs_in_csv')==False:
+            os.mkdir('dialogs_in_csv')
+        if os.path.exists(savename)==True:
+            shutil.rmtree(savename)
+        os.mkdir(savename)
+        while True:
+            a=input('Введите имя диалога (кроме групп), 1, если хотите перевести в csv все диалоги, 0, чтобы выйти:')
+            if a=='0':
+                break
+            elif a=='1':
+                dump_all(name_dialog,dialogs,savename)
+                print('Done')
+            else:
+                try:
+                    combine(name_dialog[name_dialog.index(a)],dialogs[name_dialog.index(a)],savename+'/')
+                except ValueError:
+                    print('Такого диалога нет')
+                else:
+                    print('Done')
+    else:
+        print('Неверная папка, в ней нет messages')
