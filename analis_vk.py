@@ -5,6 +5,7 @@ import os
 import shutil
 import codecs
 import pickle
+import time
 
 
 
@@ -129,6 +130,7 @@ def dump_all(name_dialog,dialog_combo,savename):
    
 if __name__=='__main__':
     dirname=input('Введите папку с распакованным архивом: ')
+    t=time.time()
     logdir='.log/'+dirname
     savename='dialogs_in_csv/'+dirname
     dirname=dirname+'/messages'
@@ -149,6 +151,7 @@ if __name__=='__main__':
         if os.path.exists(savename)==True:
             shutil.rmtree(savename)
         os.mkdir(savename)
+        print('Затрачено времени: ',time.time()-t)
         while True:
             a=input('Введите имя диалога (кроме групп), 1, если хотите перевести в csv все диалоги, 0, чтобы выйти:')
             if a=='0':
