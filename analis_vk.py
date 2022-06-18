@@ -21,9 +21,8 @@ def dialog_setup(dirname,*debug):
     dialoges.sort()
     count=1
     for i in dialoges:
-        i=int(i)
-        dialog={'Автор':[],'Дата отправки':[],'Сообщение':[],'Вложение':[]}
         if i>=0:
+            dialog={'Автор':[],'Дата отправки':[],'Сообщение':[],'Вложение':[]}
             i=str(i)
             namedir=dirname+'/'+i
             mesg=os.listdir(namedir)
