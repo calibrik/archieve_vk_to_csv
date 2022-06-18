@@ -34,10 +34,13 @@ def dialog_setup(dirname,*debug):
                 soup=BeautifulSoup(text,'html.parser')
                 divs=soup.find_all('div',class_='message')
                 for div in divs:
+                    a=div.find('a',class_='attachment__link')
                     div=div.text.split('\n')
                     div.pop(0)
                     if div[2]=='':
                         div[2]='NaN'
+                    elif a!=None:
+                        div[2]=a['href']
                     author=div[0].split(',')
                     date=author[1]
                     date=date.split(' ')
@@ -68,6 +71,10 @@ def dialog_setup(dirname,*debug):
                             date[1]='11'
                         elif date[1]=='дек':
                             date[1]='12'
+                        if len(date[0])==1:
+                            date[0]='0'+date[0]
+                        if len(date[3])==7:
+                            date[3]='0'+date[3]
                         date=date[2]+'-'+date[1]+'-'+date[0]+'-'+date[3]
                     else:
                         date=dialog['Дата отправки'][-1]
@@ -111,9 +118,9 @@ def combine(name_dialog,dialog_combo,savename):
     name=savename+name_dialog+'.csv'
     table=table.sort_values('Дата отправки')
     try:
-        table.to_csv(name)
-    except Exception:
-        print('Баг с диалогом ',name_dialog) 
+        table.to_csv(name,index=False)
+    except Exception as exp:
+        print('ОШИБКА ',exp,' с диалогом ',name_dialog) 
 
 def save_obj(obj, name ):
     with open(name, 'wb') as f:
