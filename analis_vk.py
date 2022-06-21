@@ -158,6 +158,7 @@ if __name__=='__main__':
             os.mkdir('.log')
         if os.path.exists(logdir)==False:
             os.mkdir(logdir)
+        if os.path.exists(logdir+'/name_id.pkl')==False:
             name_id=nameid_combine(dirname)
             save_obj(name_id,logdir+'/name_id.pkl')
         else:
@@ -166,6 +167,8 @@ if __name__=='__main__':
             os.mkdir('dialogs_in_csv')
         if os.path.exists(savename)==False:
             os.mkdir(savename)
+        for i in range(len(name_id)):
+            print(i,'.',name_id[i][0],sep='')
         while True:
             a=input('Введите имя диалога (кроме пабликов), 1, если хотите перевести в csv все диалоги, 0, чтобы выйти:')
             if a=='0':
