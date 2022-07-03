@@ -10,8 +10,9 @@ import time
 
 
 
-def name_setup(dirname):
-    name_dialog=[]
+def name_id_setup(dirname):
+    name_id=[]
+    flag=0
     path=dirname+'/index-messages.html'
     with codecs.open(path,'r','windows-1251') as f:
         text=f.read()
@@ -24,32 +25,13 @@ def name_setup(dirname):
         if a>=0:
             i=i.text[1:-1]
             i=i.replace('/','')
-            name_dialog.append(i)
-    return name_dialog
-
-def get_id(dirname):
-    id_mesg=os.listdir(dirname)
-    id_mesg.remove('index-messages.html')
-    i=0
-    while i<len(id_mesg):
-        id_mesg[i]=int(id_mesg[i])
-        if id_mesg[i]<0:
-            id_mesg.pop(i)
-        else:
-            i+=1
-    id_mesg.sort()
-    return id_mesg
-
-
-def nameid_combine(dirname):
-    id_mesg=get_id(dirname)
-    name=name_setup(dirname)
-    name_id=[]
-    for i in range(len(id_mesg)):
-        name_id.append([name[i],id_mesg[i]])
+            if flag!=0 and i=='DELETED':
+                i+=str(flag)
+                flag+=1
+            elif i=='DELETED':
+                flag=1
+            name_id.append([i,a])
     return name_id
-
-
 
 def get_mesg(id_mesg,dirname):
     dialog={'Автор':[],'Дата отправки':[],'Сообщение':[],'Вложение':[]}
@@ -159,7 +141,7 @@ if __name__=='__main__':
         if os.path.exists(logdir)==False:
             os.mkdir(logdir)
         if os.path.exists(logdir+'/name_id.pkl')==False:
-            name_id=nameid_combine(dirname)
+            name_id=name_id_setup(dirname)
             save_obj(name_id,logdir+'/name_id.pkl')
         else:
             name_id=load_obj(logdir+'/name_id.pkl')
@@ -169,33 +151,49 @@ if __name__=='__main__':
             os.mkdir(savename)
         for i in range(len(name_id)):
             print(i,'.',name_id[i][0],sep='')
+        type_input=input('Вы хотите выбирать диалог по имени или по номеру? (0/1):')
         while True:
-            a=input('Введите имя диалога (кроме пабликов), 1, если хотите перевести в csv все диалоги, 0, чтобы выйти:')
-            if a=='0':
+            a=input('Введите номер диалога или имя, all, если хотите перевести в csv все диалоги, exit, чтобы выйти:')
+            if a=='exit':
                 break
-            elif a=='1':
+            elif a=='all':
                 t=time.time()
                 dump_all(name_id,savename,dirname)
                 print('Done')
                 print('Затрачено времени: ',time.time()-t,'c')
             else:
                 t=time.time()
-                flag=0
-                for i in name_id:
-                    if i[0]==a:
-                        flag=1
-                        logfile=logdir+'/'+i[0]+'.pkl'
+                if type_input==0:     
+                    flag=0
+                    for i in name_id:
+                        if i[0]==a:
+                            flag=1
+                            logfile=logdir+'/'+i[0]+'.pkl'
+                            if os.path.exists(logfile):
+                                dialog=load_obj(logfile)
+                            else:
+                                dialog=get_mesg(str(i[1]),dirname)
+                                save_obj(dialog,logfile)
+                            combine(i[0],dialog,savename+'/')  
+                            print('Done')
+                            break;
+                    if flag==0:
+                        print('Неверный ввод')
+                    flag=1
+                else:
+                    try:
+                        logfile=logdir+'/'+name_id[int(a)][0]+'.pkl'
+                    except Exception:
+                        print('Неверный ввод')
+                    else:
                         if os.path.exists(logfile):
                             dialog=load_obj(logfile)
                         else:
-                            dialog=get_mesg(str(i[1]),dirname)
+                            dialog=get_mesg(str(name_id[int(a)][1]),dirname)
                             save_obj(dialog,logfile)
-                        combine(i[0],dialog,savename+'/')  
+                        combine(name_id[int(a)][0],dialog,savename+'/')  
                         print('Done')
-                        break;
-                if flag==0:
-                    print('Такого диалога нет')
-                flag=1
+                        
                 print('Затрачено времени: ',time.time()-t,'c')
     else:
         print('Неверная папка, в ней нет messages')
