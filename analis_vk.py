@@ -121,6 +121,8 @@ def load_obj(name ):
 def dump_all(name_id,savename,dirname):
     count=0
     for i in name_id:
+        i[0]=i[0].replace('|','')
+        i[0]=i[0].replace('?','')
         logfile=logdir+'/'+i[0]+'.pkl'
         if os.path.exists(logfile):
             dialog=load_obj(logfile)
