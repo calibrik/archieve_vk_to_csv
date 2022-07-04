@@ -165,7 +165,7 @@ if __name__=='__main__':
                 print('Затрачено времени: ',time.time()-t,'c')
             else:
                 t=time.time()
-                if type_input==0:     
+                if type_input=='0':     
                     flag=0
                     for i in name_id:
                         if i[0]==a:
