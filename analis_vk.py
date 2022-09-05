@@ -6,7 +6,7 @@ import codecs
 import pickle
 import time
 
-
+month={"янв":"01","фев":"02","мар":"03","апр":"04","мая":"05","июн":"06","июл":"07","авг":"08","сен":"09","окт":"10","ноя":"11","дек":"12"}
 
 
 
@@ -55,39 +55,12 @@ def get_mesg(id_mesg,dirname):
                 date=author[1]
                 date=date.split(' ')
                 date.pop(0)
-                if len(date)>3:
-                    date.pop(3)
-                    if date[1]=='янв':
-                        date[1]='01'
-                    elif date[1]=='фев':
-                        date[1]='02'
-                    elif date[1]=='мар':
-                        date[1]='03'
-                    elif date[1]=='апр':
-                        date[1]='04'
-                    elif date[1]=='мая':
-                        date[1]='05'
-                    elif date[1]=='июн':
-                        date[1]='06'
-                    elif date[1]=='июл':
-                        date[1]='07'
-                    elif date[1]=='авг':
-                        date[1]='08'
-                    elif date[1]=='сен':
-                        date[1]='09'
-                    elif date[1]=='окт':
-                        date[1]='10'
-                    elif date[1]=='ноя':
-                        date[1]='11'
-                    elif date[1]=='дек':
-                        date[1]='12'
-                    if len(date[0])==1:
-                        date[0]='0'+date[0]
-                    if len(date[3])==7:
-                        date[3]='0'+date[3]
-                    date=date[2]+'-'+date[1]+'-'+date[0]+'-'+date[3]
-                else:
-                    date=dialog['Дата отправки'][-1]
+                date[1]=month[date[1]]
+                if len(date[0])==1:
+                    date[0]='0'+date[0]
+                if len(date[3])==7:
+                    date[3]='0'+date[3]
+                date=date[2]+'-'+date[1]+'-'+date[0]+'-'+date[3]
                 author=author[0]
                 message=div[1]
                 if message=='':
