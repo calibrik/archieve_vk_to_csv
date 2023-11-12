@@ -55,6 +55,7 @@ def get_mesg(id_mesg,dirname):
                 date=author[1]
                 date=date.split(' ')
                 date.pop(0)
+                date.pop(3)
                 date[1]=month[date[1]]
                 if len(date[0])==1:
                     date[0]='0'+date[0]
